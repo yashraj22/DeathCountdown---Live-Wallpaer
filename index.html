@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Death Counter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(0,0,0);
+}
+
+.week {
+  width: 7px;
+  height: 7px;
+  margin: 3px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.lived {
+  background-color: red;
+}
+
+.remaining {
+  background-color: green;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.center {
+  text-align: center;
+  margin-top: 10px;
+  
+}
+
+.mainContainer {
+  background-color: rgb(0,0,0);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1200px;
+  height:250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 60px;
+}
+
+#formattedTime {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color:white;
+    margin-top: 1.25rem;
+}
+#texta {
+    color:white;    
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 100;
+    font-family: 'Inter', sans-serif;
+}
+#textb {
+    color:white;    
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 100;
+    font-family: 'Inter', sans-serif;
+    margin-top: 0px;
+}
+</style>
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="center">
+            <div id="formattedTime"></div>
+            <h1 id="texta">Are you happy?</h1>
+        </div>
+        <div class="container" id="weeksContainer"></div>
+        <div class="center">
+            <h1 id="textb">You think you have time, nigga.</h1>
+        </div>
+    </div>
+
+<script>
+  const predictedAge = 70;
+  const yearOfBirth = 2002;
+  const totalWeeks = predictedAge * 52;
+  const currentYear = new Date().getFullYear();
+  const yearsLived = currentYear - yearOfBirth;
+  const livedWeeks = yearsLived * 52;
+
+  const currentDate = new Date();
+  const predictedYear = yearOfBirth + predictedAge;
+  const predictedDate = new Date(predictedYear, currentDate.getMonth(), currentDate.getDate());
+  let remainingSeconds = Math.floor((predictedDate.getTime() - currentDate.getTime()) / 1000);
+  
+  function updateFormattedTime() {
+    let seconds = remainingSeconds;
+    const days = Math.floor(seconds / (24 * 3600));
+    const hours = Math.floor((seconds % (24 * 3600)) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    seconds = seconds % 60;
+    const years = Math.floor(days / 365);
+    const months = Math.floor((days % 365) / 30);
+    const remainingDays = days % 30;
+
+    document.getElementById('formattedTime').textContent = `${years} years : ${months} months : ${remainingDays} days : ${hours} hours : ${minutes} minutes : ${seconds} seconds`;
+  }
+
+  function populateWeeks() {
+    const container = document.getElementById('weeksContainer');
+    for (let i = 0; i < totalWeeks; i++) {
+      const weekDiv = document.createElement('div');
+      weekDiv.className = `week ${i < livedWeeks ? 'lived' : 'remaining'}`;
+      container.appendChild(weekDiv);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    populateWeeks();
+    updateFormattedTime();
+    setInterval(() => {
+      remainingSeconds--;
+      updateFormattedTime();
+    }, 1000);
+  });
+</script>
+</body>
+</html>
